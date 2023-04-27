@@ -4,5 +4,6 @@ export default function home ({ navigation }) {
 
 return (
     <Text>Welcome to Connect 4 </Text>
+
 );
 }
