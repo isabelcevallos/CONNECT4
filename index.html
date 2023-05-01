@@ -1,25 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect 4</title>
-    <link href="styles.css" rel="stylesheet">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>User Form</title>
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
+
 <body>
-    <div id="border">
-        <div id="banner">
-        <h1>Connect 4</h1>
-    <nav>
-        <ul>
-            <li id="purple"><a href="index.html">Home</a></li>
-        </ul>
-    </nav>
-    <form action ="main.html">Play Game</a></li>
-        <label for="username">Please write your username here:</label><br>
-        <input type="text" id="username" name="username"><br>
-        <input type="submit" value="Submit">
-      </form>
+	<div class="container">
+
+		<div class="jumbotron">
+			
+			<h1>Connect 4</h1>
+	
+			<form>
+				<div class="form-group">
+					<label for="fullNameField">Enter your username here: </label>
+					<input type="text" class="form-control" id="fullNameField">
+				</div>
+				<a class="btn btn-default" onclick="submitUser()">Submit</a>
+			</form>
+
+            <form action ="main.html"></a></li>
+                <input type="submit" id ="play" value="Play Game">
+            </form>
+
+		</div>
+		
+		<div>
+			<h1>Past Users:</h1>
+			<div 
+                id="previousUsers">
+			</div>
+		</div>
+
+	</div>
+
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<!-- Bootstrap JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+
+	<script>
+
+		//Store information about your firebase so we can connect
+		var config = {
+			apiKey: "AIzaSyA5ivGfO_scYGPN0U_PLEwmXHR-khqDX0g",
+            authDomain: "connect4game-1f582.firebaseapp.com",
+            databaseURL: "https://connect4game-1f582-default-rtdb.firebaseio.com",
+            projectId: "connect4game-1f582",
+            storageBucket: "connect4game-1f582.appspot.com",
+            messagingSenderId: "495050611059",
+            appId: "1:495050611059:web:9498a88d31ef83ae584d06"
+		};
+
+		//initialize firebase
+		firebase.initializeApp(config);
+		var database = firebase.database();
+		
+		var firebaseUsersCollection = database.ref().child('users');
+
+		function submitUser() {
+			var user = {
+				fullName: $('#fullNameField').val(), 
+			};
+			
+			//'push' user to the existing list
+			firebaseUsersCollection.push(user); 
+			
+		};
+		
+		firebaseUsersCollection.on('value',function(users){
+			
+			var allUsersHtml = "";
+			
+			users.forEach(function(firebaseUserReference){
+				
+				var user = firebaseUserReference.val();
+				console.log(user); 
+				
+				var individialUserHtml =	`<div class='item'>
+												<p>Name: `+user.fullName+`</p>
+											</div>`;
+				
+				//add the individual order html to the end of the allOrdersHtml list
+				allUsersHtml = allUsersHtml + individialUserHtml;
+			});
+			
+			$('#previousUsers').html(allUsersHtml);
+			
+		});
+	</script>
+
 </body>
+
 </html>
+
